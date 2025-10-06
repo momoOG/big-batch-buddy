@@ -151,27 +151,27 @@ export function AllLocks() {
         const isUnlocked = Number(lock.unlockTime) <= now
         return (
           <Card key={`${lock.user}-${lock.index}`} className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex gap-8 items-center">
-                {/* Token Logo - Large, centered on the left */}
+            <CardContent className="p-4">
+              <div className="flex gap-6 items-center">
+                {/* Token Logo - Medium size */}
                 <div className="flex-shrink-0">
                   <TokenAvatar 
                     address={lock.token}
                     symbol={lock.symbol}
                     name={lock.name}
-                    size="xl"
+                    size="lg"
                   />
                 </div>
                 
-                {/* Lock Details - Right side, compact and aligned */}
+                {/* Lock Details - Right side, compact */}
                 <div className="flex-1 min-w-0 space-y-1">
                   {/* Title and Badge */}
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-xl font-bold text-foreground leading-tight">
+                    <h3 className="text-lg font-bold text-foreground leading-tight">
                       {lock.name}
                     </h3>
                     <Badge
-                      className={`text-xs px-3 py-1 flex-shrink-0 ${
+                      className={`text-[10px] px-2 py-0.5 flex-shrink-0 ${
                         lock.claimed
                           ? "bg-gray-500 hover:bg-gray-600"
                           : isUnlocked
@@ -189,16 +189,16 @@ export function AllLocks() {
                   
                   {/* Amount */}
                   <div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
-                    <div className="text-lg font-bold text-foreground leading-tight">
+                    <div className="text-[9px] text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
+                    <div className="text-base font-bold text-foreground leading-tight">
                       {Number(formatEther(lock.amount)).toLocaleString()} {lock.symbol}
                     </div>
                   </div>
                   
                   {/* Countdown */}
                   <div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide">UNLOCKS IN:</div>
-                    <div className="text-base font-mono font-semibold text-primary leading-tight">
+                    <div className="text-[9px] text-muted-foreground uppercase tracking-wide">UNLOCKS IN:</div>
+                    <div className="text-sm font-mono font-semibold text-primary leading-tight">
                       {formatCountdown(lock.unlockTime)}
                     </div>
                   </div>
