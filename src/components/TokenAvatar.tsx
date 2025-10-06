@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Coins } from "lucide-react"
 
 interface TokenAvatarProps {
@@ -27,6 +27,7 @@ const getColorFromAddress = (address: string, tokenSymbol: string) => {
 }
 
 export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarProps) {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [logoError, setLogoError] = useState(false)
   const [logoLoading, setLogoLoading] = useState(true)
   
@@ -38,17 +39,37 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
 
   const colors = getColorFromAddress(address, symbol)
   
-  // URLs untuk coba fetch logo
-  const logoUrls = [
-    `https://tokens.app.pulsex.com/images/tokens/${address.toLowerCase()}.png`,
-    `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/pulsechain/assets/${address.toLowerCase()}/logo.png`,
-    `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address.toLowerCase()}/logo.png`,
-  ]
-
-  const tryNextLogo = (urls: string[], index: number = 0): string | null => {
-    if (index >= urls.length) return null
-    return urls[index]
-  }
+  // Fetch logo dari DexScreener API
+  useEffect(() => {
+    const fetchDexScreenerLogo = async () => {
+      try {
+        const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+        const data = await response.json()
+        
+        if (data.pairs && data.pairs.length > 0) {
+          const tokenInfo = data.pairs[0].info
+          if (tokenInfo?.imageUrl) {
+            setLogoUrl(tokenInfo.imageUrl)
+            setLogoLoading(false)
+            return
+          }
+        }
+      } catch (error) {
+        console.log("DexScreener fetch failed, trying other sources")
+      }
+      
+      // Fallback ke sumber lain jika DexScreener gagal
+      const fallbackUrls = [
+        `https://tokens.app.pulsex.com/images/tokens/${address.toLowerCase()}.png`,
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/pulsechain/assets/${address.toLowerCase()}/logo.png`,
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address.toLowerCase()}/logo.png`,
+      ]
+      
+      setLogoUrl(fallbackUrls[0])
+    }
+    
+    fetchDexScreenerLogo()
+  }, [address])
 
   const handleImageError = () => {
     setLogoError(true)
@@ -68,9 +89,9 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
       title={`${name} (${symbol})`}
     >
       {/* Try loading real logo */}
-      {!logoError && (
+      {!logoError && logoUrl && (
         <img 
-          src={logoUrls[0]}
+          src={logoUrl}
           alt={symbol}
           className="w-full h-full object-cover absolute inset-0"
           onError={handleImageError}
