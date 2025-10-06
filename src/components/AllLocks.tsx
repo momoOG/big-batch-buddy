@@ -169,13 +169,13 @@ export function AllLocks() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-2xl font-bold text-foreground mb-1">
-                        Lock #{lock.index + 1}
+                        {lock.name}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        User: {lock.user.slice(0, 6)}...{lock.user.slice(-4)}
+                        {lock.symbol} · Position #{lock.index + 1}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Token: {lock.name} ({lock.symbol})
+                        Owner: {lock.user.slice(0, 6)}...{lock.user.slice(-4)}
                       </p>
                     </div>
                     <Badge

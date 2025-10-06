@@ -85,7 +85,8 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
     <div 
       className={`${sizeClasses[size]} rounded-full flex items-center justify-center overflow-hidden border-2 border-border shadow-md relative`}
       style={{ 
-        background: logoError || logoLoading ? colors.gradient : 'transparent'
+        background: logoError || logoLoading ? colors.gradient : 'transparent',
+        imageRendering: 'crisp-edges'
       }}
       title={`${name} (${symbol})`}
     >
@@ -94,10 +95,14 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
         <img 
           src={logoUrl}
           alt={symbol}
-          className="w-full h-full object-cover absolute inset-0"
+          className="w-full h-full object-contain absolute inset-0"
           onError={handleImageError}
           onLoad={handleImageLoad}
-          style={{ display: logoLoading || logoError ? 'none' : 'block' }}
+          style={{ 
+            display: logoLoading || logoError ? 'none' : 'block',
+            imageRendering: '-webkit-optimize-contrast',
+            backfaceVisibility: 'hidden'
+          }}
         />
       )}
       
