@@ -20,7 +20,7 @@ interface LockDetail {
   token: `0x${string}`
   name: string
   symbol: string
-  logoUrl: string | null
+  logoUrl: string
   amount: bigint
   unlockTime: bigint
   claimed: boolean
@@ -89,7 +89,6 @@ export function AllLocks() {
             // Metadata token
             let name = "Unknown"
             let symbol = "???"
-            let logoUrl = null
             
             try {
               name = (await publicClient.readContract({
@@ -103,10 +102,10 @@ export function AllLocks() {
                 abi: ERC20_ABI,
                 functionName: "symbol",
               })) as string
-              
-              // Fetch token logo
-              logoUrl = await getTokenLogo(token)
             } catch {}
+            
+            // Fetch token logo (always returns something - real logo or generated avatar)
+            const logoUrl = await getTokenLogo(token)
 
             detailedLocks.push({
               user,
@@ -161,21 +160,13 @@ export function AllLocks() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {/* Token Logo */}
-                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
-                    {lock.logoUrl ? (
-                      <img 
-                        src={lock.logoUrl} 
-                        alt={lock.symbol}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // Fallback ke icon jika image error
-                          e.currentTarget.style.display = 'none'
-                          e.currentTarget.nextElementSibling.style.display = 'block'
-                        }}
-                      />
-                    ) : null}
-                    <Coins className="w-5 h-5 text-muted-foreground" style={{ display: lock.logoUrl ? 'none' : 'block' }} />
+                  {/* Token Logo - Always present (real logo or generated avatar) */}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden border border-border shadow-sm">
+                    <img 
+                      src={lock.logoUrl} 
+                      alt={lock.symbol}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <CardTitle>Lock #{lock.index + 1}</CardTitle>
                 </div>
