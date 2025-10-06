@@ -50,6 +50,7 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
         if (data.pairs && data.pairs.length > 0) {
           const tokenInfo = data.pairs[0].info
           if (tokenInfo?.imageUrl) {
+            // DexScreener biasanya menyediakan logo beresolusi tinggi
             setLogoUrl(tokenInfo.imageUrl)
             setLogoLoading(false)
             return
@@ -90,18 +91,23 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
       }}
       title={`${name} (${symbol})`}
     >
-      {/* Try loading real logo */}
+      {/* Try loading real logo with retina support */}
       {!logoError && logoUrl && (
         <img 
           src={logoUrl}
+          srcSet={`${logoUrl} 1x, ${logoUrl} 2x, ${logoUrl} 3x`}
           alt={symbol}
-          className="w-full h-full object-contain absolute inset-0"
+          className="w-full h-full object-cover absolute inset-0"
           onError={handleImageError}
           onLoad={handleImageLoad}
+          loading="lazy"
+          decoding="async"
           style={{ 
             display: logoLoading || logoError ? 'none' : 'block',
-            imageRendering: '-webkit-optimize-contrast',
-            backfaceVisibility: 'hidden'
+            imageRendering: 'auto',
+            WebkitFontSmoothing: 'antialiased',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)'
           }}
         />
       )}
