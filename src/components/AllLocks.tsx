@@ -10,9 +10,12 @@ import {
   CardDescription,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { formatEther } from "viem"
 import { CONTRACT_ADDRESS, TOKEN_LOCKER_ABI, ERC20_ABI } from "@/config"
 import { TokenAvatar } from "@/components/TokenAvatar"
+import { useToast } from "@/hooks/use-toast"
+import { Share2 } from "lucide-react"
 
 interface LockDetail {
   user: `0x${string}`
@@ -29,6 +32,7 @@ export function AllLocks() {
   const publicClient = usePublicClient()
   const [locks, setLocks] = useState<LockDetail[]>([])
   const [now, setNow] = useState<number>(Math.floor(Date.now() / 1000))
+  const { toast } = useToast()
 
   // ⏱ update countdown setiap detik
   useEffect(() => {
@@ -145,6 +149,15 @@ export function AllLocks() {
   const formatDate = (ts: bigint) =>
     new Date(Number(ts) * 1000).toLocaleString()
 
+  const handleShareLock = (lock: LockDetail) => {
+    const shareUrl = `${window.location.origin}/lock/${lock.user}/${lock.index}`
+    navigator.clipboard.writeText(shareUrl)
+    toast({
+      title: "Link copied!",
+      description: "Share link has been copied to clipboard",
+    })
+  }
+
   return (
     <div className="space-y-6">
       {locks.filter(lock => !lock.claimed).map((lock, idx) => {
@@ -170,21 +183,31 @@ export function AllLocks() {
                     <h3 className="text-lg font-bold text-foreground leading-tight">
                       {lock.name}
                     </h3>
-                    <Badge
-                      className={`text-[10px] px-2 py-0.5 flex-shrink-0 ${
-                        lock.claimed
-                          ? "bg-gray-500 hover:bg-gray-600"
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        className={`text-[10px] px-2 py-0.5 flex-shrink-0 ${
+                          lock.claimed
+                            ? "bg-gray-500 hover:bg-gray-600"
+                            : isUnlocked
+                            ? "bg-green-500 hover:bg-green-600"
+                            : "bg-blue-500 hover:bg-blue-600"
+                        }`}
+                      >
+                        {lock.claimed
+                          ? "🔓 Claimed"
                           : isUnlocked
-                          ? "bg-green-500 hover:bg-green-600"
-                          : "bg-blue-500 hover:bg-blue-600"
-                      }`}
-                    >
-                      {lock.claimed
-                        ? "🔓 Claimed"
-                        : isUnlocked
-                        ? "✓ Ready"
-                        : "🔒 Locked"}
-                    </Badge>
+                          ? "✓ Ready"
+                          : "🔒 Locked"}
+                      </Badge>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0"
+                        onClick={() => handleShareLock(lock)}
+                      >
+                        <Share2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                   
                   {/* Amount */}
