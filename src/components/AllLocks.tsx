@@ -202,6 +202,19 @@ export function AllLocks() {
                       {formatCountdown(lock.unlockTime)}
                     </div>
                   </div>
+                  
+                  {/* User Address */}
+                  <div>
+                    <div className="text-[9px] text-muted-foreground uppercase tracking-wide">LOCKED BY:</div>
+                    <a 
+                      href={`https://scan.mypinata.cloud/ipfs/bafybeidn64pd2u525lmoipjl4nh3ooa2imd7huionjsdepdsphl5slfowy/#/address/${lock.user}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-mono text-blue-500 hover:text-blue-400 hover:underline leading-tight"
+                    >
+                      {lock.user.slice(0, 6)}...{lock.user.slice(-4)}
+                    </a>
+                  </div>
                 </div>
               </div>
             </CardContent>
