@@ -163,11 +163,11 @@ export function AllLocks() {
                   />
                 </div>
                 
-                {/* Lock Details - Right side, vertically centered */}
-                <div className="flex-1 min-w-0 space-y-2">
+                {/* Lock Details - Right side, compact and aligned */}
+                <div className="flex-1 min-w-0 space-y-1">
                   {/* Title and Badge */}
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-3xl font-bold text-foreground">
+                    <h3 className="text-xl font-bold text-foreground leading-tight">
                       {lock.name}
                     </h3>
                     <Badge
@@ -189,16 +189,16 @@ export function AllLocks() {
                   
                   {/* Amount */}
                   <div>
-                    <div className="text-xs text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
-                    <div className="text-2xl font-bold text-foreground mt-1">
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
+                    <div className="text-lg font-bold text-foreground leading-tight">
                       {Number(formatEther(lock.amount)).toLocaleString()} {lock.symbol}
                     </div>
                   </div>
                   
                   {/* Countdown */}
                   <div>
-                    <div className="text-xs text-muted-foreground uppercase tracking-wide">UNLOCKS IN:</div>
-                    <div className="text-xl font-mono font-semibold text-primary mt-1">
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wide">UNLOCKS IN:</div>
+                    <div className="text-base font-mono font-semibold text-primary leading-tight">
                       {formatCountdown(lock.unlockTime)}
                     </div>
                   </div>
