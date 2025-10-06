@@ -91,23 +91,19 @@ export function TokenAvatar({ address, symbol, name, size = "md" }: TokenAvatarP
       }}
       title={`${name} (${symbol})`}
     >
-      {/* Try loading real logo with retina support */}
+      {/* Try loading real logo - crisp and clean */}
       {!logoError && logoUrl && (
         <img 
           src={logoUrl}
-          srcSet={`${logoUrl} 1x, ${logoUrl} 2x, ${logoUrl} 3x`}
           alt={symbol}
-          className="w-full h-full object-cover absolute inset-0"
+          className="w-full h-full object-contain absolute inset-0 p-1"
           onError={handleImageError}
           onLoad={handleImageLoad}
           loading="lazy"
           decoding="async"
           style={{ 
             display: logoLoading || logoError ? 'none' : 'block',
-            imageRendering: 'auto',
-            WebkitFontSmoothing: 'antialiased',
-            backfaceVisibility: 'hidden',
-            transform: 'translateZ(0)'
+            imageRendering: 'crisp-edges'
           }}
         />
       )}

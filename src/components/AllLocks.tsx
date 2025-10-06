@@ -152,8 +152,8 @@ export function AllLocks() {
         return (
           <Card key={`${lock.user}-${lock.index}`} className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
             <CardContent className="p-6">
-              <div className="flex gap-6 items-start">
-                {/* Token Logo - Large on the left */}
+              <div className="flex gap-6 items-center">
+                {/* Token Logo - Large, centered on the left */}
                 <div className="flex-shrink-0">
                   <TokenAvatar 
                     address={lock.token}
@@ -164,22 +164,19 @@ export function AllLocks() {
                 </div>
                 
                 {/* Lock Details - Right side */}
-                <div className="flex-1 min-w-0">
-                  {/* Header with title and status */}
-                  <div className="flex items-start justify-between mb-4">
+                <div className="flex-1 min-w-0 space-y-3">
+                  {/* Title and Badge */}
+                  <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-foreground mb-1">
+                      <h3 className="text-xl font-bold text-foreground">
                         {lock.name}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mt-0.5">
                         {lock.symbol} · Position #{lock.index + 1}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Owner: {lock.user.slice(0, 6)}...{lock.user.slice(-4)}
                       </p>
                     </div>
                     <Badge
-                      className={`text-sm px-3 py-1 ${
+                      className={`text-xs px-3 py-1 flex-shrink-0 ${
                         lock.claimed
                           ? "bg-gray-500 hover:bg-gray-600"
                           : isUnlocked
@@ -188,34 +185,39 @@ export function AllLocks() {
                       }`}
                     >
                       {lock.claimed
-                        ? "✅ Claimed"
+                        ? "🔓 Claimed"
                         : isUnlocked
-                        ? "🎯 Ready"
+                        ? "✓ Ready"
                         : "🔒 Locked"}
                     </Badge>
                   </div>
+
+                  {/* Owner */}
+                  <div className="text-sm text-muted-foreground">
+                    Owner: <span className="text-foreground font-mono">{lock.user.slice(0, 6)}...{lock.user.slice(-4)}</span>
+                  </div>
                   
-                  {/* Lock Info Grid */}
-                  <div className="space-y-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-muted-foreground font-medium">Amount:</span>
-                      <span className="text-lg font-bold text-foreground">
-                        {formatEther(lock.amount)} {lock.symbol}
-                      </span>
+                  {/* Amount - Large and prominent */}
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Amount:</div>
+                    <div className="text-2xl font-bold text-foreground">
+                      {Number(formatEther(lock.amount)).toLocaleString()} {lock.symbol}
                     </div>
-                    
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-muted-foreground font-medium">Unlocks in:</span>
-                      <span className="text-lg font-mono font-semibold text-primary">
-                        {formatCountdown(lock.unlockTime)}
-                      </span>
+                  </div>
+                  
+                  {/* Countdown */}
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Unlocks in:</div>
+                    <div className="text-lg font-mono font-semibold text-primary">
+                      {formatCountdown(lock.unlockTime)}
                     </div>
-                    
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-muted-foreground font-medium">Unlock Date:</span>
-                      <span className="text-base text-foreground">
-                        {formatDate(lock.unlockTime)}
-                      </span>
+                  </div>
+                  
+                  {/* Date */}
+                  <div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Unlock Date:</div>
+                    <div className="text-sm text-foreground">
+                      {formatDate(lock.unlockTime)}
                     </div>
                   </div>
                 </div>
