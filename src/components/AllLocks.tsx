@@ -10,17 +10,15 @@ import {
   CardDescription,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Coins } from "lucide-react"
 import { formatEther } from "viem"
 import { CONTRACT_ADDRESS, TOKEN_LOCKER_ABI, ERC20_ABI } from "@/config"
-import { getTokenLogo } from "@/lib/tokenLogo"
+import { TokenAvatar } from "@/components/TokenAvatar"
 
 interface LockDetail {
   user: `0x${string}`
   token: `0x${string}`
   name: string
   symbol: string
-  logoUrl: string
   amount: bigint
   unlockTime: bigint
   claimed: boolean
@@ -103,16 +101,12 @@ export function AllLocks() {
                 functionName: "symbol",
               })) as string
             } catch {}
-            
-            // Fetch token logo (always returns something - real logo or generated avatar)
-            const logoUrl = await getTokenLogo(token)
 
             detailedLocks.push({
               user,
               token: token as `0x${string}`,
               name,
               symbol,
-              logoUrl,
               amount,
               unlockTime,
               claimed,
@@ -160,14 +154,13 @@ export function AllLocks() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {/* Token Logo - Always present (real logo or generated avatar) */}
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden border border-border shadow-sm">
-                    <img 
-                      src={lock.logoUrl} 
-                      alt={lock.symbol}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {/* Token Avatar - Always displays (logo or gradient with initials) */}
+                  <TokenAvatar 
+                    address={lock.token}
+                    symbol={lock.symbol}
+                    name={lock.name}
+                    size="md"
+                  />
                   <CardTitle>Lock #{lock.index + 1}</CardTitle>
                 </div>
                 <Badge
