@@ -146,55 +146,80 @@ export function AllLocks() {
     new Date(Number(ts) * 1000).toLocaleString()
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {locks.map((lock, idx) => {
         const isUnlocked = Number(lock.unlockTime) <= now
         return (
-          <Card key={`${lock.user}-${lock.index}`} className="bg-card border-border shadow-lg">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {/* Token Avatar - Always displays (logo or gradient with initials) */}
+          <Card key={`${lock.user}-${lock.index}`} className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex gap-6 items-start">
+                {/* Token Logo - Large on the left */}
+                <div className="flex-shrink-0">
                   <TokenAvatar 
                     address={lock.token}
                     symbol={lock.symbol}
                     name={lock.name}
-                    size="md"
+                    size="xl"
                   />
-                  <CardTitle>Lock #{lock.index + 1}</CardTitle>
                 </div>
-                <Badge
-                  className={
-                    lock.claimed
-                      ? "bg-gray-500"
-                      : isUnlocked
-                      ? "bg-green-500"
-                      : "bg-blue-500"
-                  }
-                >
-                  {lock.claimed
-                    ? "✅ Claimed"
-                    : isUnlocked
-                    ? "🎯 Ready"
-                    : "🔒 Locked"}
-                </Badge>
+                
+                {/* Lock Details - Right side */}
+                <div className="flex-1 min-w-0">
+                  {/* Header with title and status */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-1">
+                        Lock #{lock.index + 1}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        User: {lock.user.slice(0, 6)}...{lock.user.slice(-4)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Token: {lock.name} ({lock.symbol})
+                      </p>
+                    </div>
+                    <Badge
+                      className={`text-sm px-3 py-1 ${
+                        lock.claimed
+                          ? "bg-gray-500 hover:bg-gray-600"
+                          : isUnlocked
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-blue-500 hover:bg-blue-600"
+                      }`}
+                    >
+                      {lock.claimed
+                        ? "✅ Claimed"
+                        : isUnlocked
+                        ? "🎯 Ready"
+                        : "🔒 Locked"}
+                    </Badge>
+                  </div>
+                  
+                  {/* Lock Info Grid */}
+                  <div className="space-y-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm text-muted-foreground font-medium">Amount:</span>
+                      <span className="text-lg font-bold text-foreground">
+                        {formatEther(lock.amount)} {lock.symbol}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm text-muted-foreground font-medium">Unlocks in:</span>
+                      <span className="text-lg font-mono font-semibold text-primary">
+                        {formatCountdown(lock.unlockTime)}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm text-muted-foreground font-medium">Unlock Date:</span>
+                      <span className="text-base text-foreground">
+                        {formatDate(lock.unlockTime)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <CardDescription>
-                User: {lock.user.slice(0, 6)}...{lock.user.slice(-4)} <br />
-                Token: {lock.name} ({lock.symbol})
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                <strong>Amount:</strong> {formatEther(lock.amount)}{" "}
-                {lock.symbol}
-              </p>
-              <p>
-                <strong>Unlocks in:</strong> {formatCountdown(lock.unlockTime)}
-              </p>
-              <p>
-                <strong>Unlock Date:</strong> {formatDate(lock.unlockTime)}
-              </p>
             </CardContent>
           </Card>
         )
