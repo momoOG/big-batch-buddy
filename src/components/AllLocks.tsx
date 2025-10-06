@@ -147,7 +147,7 @@ export function AllLocks() {
 
   return (
     <div className="space-y-6">
-      {locks.map((lock, idx) => {
+      {locks.filter(lock => !lock.claimed).map((lock, idx) => {
         const isUnlocked = Number(lock.unlockTime) <= now
         return (
           <Card key={`${lock.user}-${lock.index}`} className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
