@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { CONTRACT_ADDRESS, TOKEN_LOCKER_ABI, ERC20_ABI } from "@/config"
 import { formatEther } from "viem"
+import { TokenAvatar } from "@/components/TokenAvatar"
 
 interface Lock {
   token: string
@@ -68,40 +69,62 @@ const LockCard = ({
   const countdown = useCountdown(lock.unlockTime)
 
   return (
-    <Card className="bg-card border-border shadow-lg">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg text-foreground">Lock #{lock.index + 1}</CardTitle>
-          <Badge
-            variant={isUnlocked ? "default" : "secondary"}
-            className={isUnlocked ? "bg-success" : "bg-muted"}
-          >
-            {lock.claimed ? "Claimed" : isUnlocked ? "Ready to Claim" : "Locked"}
-          </Badge>
-        </div>
-        <CardDescription className="text-muted-foreground">
-          Token:{" "}
-          {lock.name && lock.symbol
-            ? `${lock.name} (${lock.symbol})`
-            : `${lock.token.slice(0, 10)}...${lock.token.slice(-8)}`}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Amount</p>
-            <p className="font-semibold text-foreground">{formatEther(lock.amount)} Tokens</p>
+    <Card className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
+      <CardContent className="p-4">
+        <div className="flex gap-6 items-center">
+          {/* Token Logo */}
+          <div className="flex-shrink-0">
+            <TokenAvatar 
+              address={lock.token as `0x${string}`}
+              symbol={lock.symbol || "???"}
+              name={lock.name || "Unknown"}
+              size="lg"
+            />
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Status</p>
-            <p className="font-semibold text-foreground">{countdown}</p>
+          
+          {/* Lock Details */}
+          <div className="flex-1 min-w-0 space-y-1">
+            {/* Title and Badge */}
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="text-lg font-bold text-foreground leading-tight">
+                {lock.name || `Lock #${lock.index + 1}`}
+              </h3>
+              <Badge
+                className={`text-[10px] px-2 py-0.5 flex-shrink-0 ${
+                  lock.claimed
+                    ? "bg-gray-500 hover:bg-gray-600"
+                    : isUnlocked
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
+              >
+                {lock.claimed ? "🔓 Claimed" : isUnlocked ? "✓ Ready" : "🔒 Locked"}
+              </Badge>
+            </div>
+            
+            {/* Amount */}
+            <div>
+              <div className="text-[9px] text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
+              <div className="text-base font-bold text-foreground leading-tight">
+                {Number(formatEther(lock.amount)).toLocaleString()} {lock.symbol || "Tokens"}
+              </div>
+            </div>
+            
+            {/* Countdown */}
+            <div>
+              <div className="text-[9px] text-muted-foreground uppercase tracking-wide">UNLOCKS IN:</div>
+              <div className="text-sm font-mono font-semibold text-primary leading-tight">
+                {countdown}
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Claim Button - Full width below */}
         <Button
           onClick={() => onClaim(lock.index)}
           disabled={!isUnlocked || lock.claimed || isPending || isConfirming}
-          className="w-full bg-gradient-to-r from-accent to-accent-glow text-accent-foreground font-semibold py-2 shadow-lg hover:opacity-90 disabled:opacity-50"
+          className="w-full mt-4 bg-gradient-to-r from-accent to-accent-glow text-accent-foreground font-semibold py-2 shadow-lg hover:opacity-90 disabled:opacity-50"
         >
           {isPending || isConfirming
             ? "🔄 Claiming..."
