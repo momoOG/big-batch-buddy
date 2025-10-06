@@ -164,17 +164,12 @@ export function AllLocks() {
                 </div>
                 
                 {/* Lock Details - Right side */}
-                <div className="flex-1 min-w-0 space-y-3">
+                <div className="flex-1 min-w-0 space-y-4">
                   {/* Title and Badge */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-foreground">
-                        {lock.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-0.5">
-                        {lock.symbol} · Position #{lock.index + 1}
-                      </p>
-                    </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-2xl font-bold text-foreground">
+                      {lock.name}
+                    </h3>
                     <Badge
                       className={`text-xs px-3 py-1 flex-shrink-0 ${
                         lock.claimed
@@ -191,11 +186,6 @@ export function AllLocks() {
                         : "🔒 Locked"}
                     </Badge>
                   </div>
-
-                  {/* Owner */}
-                  <div className="text-sm text-muted-foreground">
-                    Owner: <span className="text-foreground font-mono">{lock.user.slice(0, 6)}...{lock.user.slice(-4)}</span>
-                  </div>
                   
                   {/* Amount - Large and prominent */}
                   <div>
@@ -210,14 +200,6 @@ export function AllLocks() {
                     <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Unlocks in:</div>
                     <div className="text-lg font-mono font-semibold text-primary">
                       {formatCountdown(lock.unlockTime)}
-                    </div>
-                  </div>
-                  
-                  {/* Date */}
-                  <div>
-                    <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Unlock Date:</div>
-                    <div className="text-sm text-foreground">
-                      {formatDate(lock.unlockTime)}
                     </div>
                   </div>
                 </div>
