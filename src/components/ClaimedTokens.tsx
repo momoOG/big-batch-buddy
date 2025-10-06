@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { formatEther } from "viem"
 import { CONTRACT_ADDRESS, TOKEN_LOCKER_ABI, ERC20_ABI } from "@/config"
+import { TokenAvatar } from "@/components/TokenAvatar"
 
 interface ClaimedLock {
   token: string
@@ -130,42 +131,49 @@ export function ClaimedTokens() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {claimedLocks.map((lock, index) => (
-        <Card key={index} className="bg-card border-border shadow-lg">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg text-foreground">
-                Claimed Lock #{lock.index + 1}
-              </CardTitle>
-              <Badge variant="default" className="bg-success text-success-foreground">
-                ✅ Claimed
-              </Badge>
-            </div>
-            <CardDescription className="text-muted-foreground">
-              Token: {lock.name} ({lock.symbol}) <br />
-              Address: {lock.token.slice(0, 10)}...{lock.token.slice(-8)}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Amount</p>
-                <p className="font-semibold text-foreground">
-                  {formatEther(lock.amount)} {lock.symbol}
-                </p>
+        <Card key={index} className="bg-card/50 backdrop-blur border-border shadow-xl hover:shadow-2xl transition-all duration-300">
+          <CardContent className="p-4">
+            <div className="flex gap-6 items-center">
+              {/* Token Logo */}
+              <div className="flex-shrink-0">
+                <TokenAvatar 
+                  address={lock.token as `0x${string}`}
+                  symbol={lock.symbol}
+                  name={lock.name}
+                  size="lg"
+                />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Claimed At</p>
-                <p className="font-semibold text-foreground">
-                  {formatDate(lock.claimedAt)}
-                </p>
+              
+              {/* Lock Details */}
+              <div className="flex-1 min-w-0 space-y-1">
+                {/* Title and Badge */}
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="text-lg font-bold text-foreground leading-tight">
+                    {lock.name}
+                  </h3>
+                  <Badge className="text-[10px] px-2 py-0.5 flex-shrink-0 bg-green-500 hover:bg-green-600">
+                    ✅ Claimed
+                  </Badge>
+                </div>
+                
+                {/* Amount */}
+                <div>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-wide">AMOUNT:</div>
+                  <div className="text-base font-bold text-foreground leading-tight">
+                    {Number(formatEther(lock.amount)).toLocaleString()} {lock.symbol}
+                  </div>
+                </div>
+                
+                {/* Claimed At */}
+                <div>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-wide">CLAIMED AT:</div>
+                  <div className="text-sm font-mono font-semibold text-primary leading-tight">
+                    {formatDate(lock.claimedAt)}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="text-center p-4 bg-success/10 rounded-lg border border-success/20">
-              <p className="text-success font-semibold">
-                🎉 Successfully claimed {formatEther(lock.amount)} {lock.symbol}!
-              </p>
             </div>
           </CardContent>
         </Card>
