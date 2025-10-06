@@ -10,14 +10,17 @@ import {
   CardDescription,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Coins } from "lucide-react"
 import { formatEther } from "viem"
 import { CONTRACT_ADDRESS, TOKEN_LOCKER_ABI, ERC20_ABI } from "@/config"
+import { getTokenLogo } from "@/lib/tokenLogo"
 
 interface LockDetail {
   user: `0x${string}`
   token: `0x${string}`
   name: string
   symbol: string
+  logoUrl: string | null
   amount: bigint
   unlockTime: bigint
   claimed: boolean
@@ -86,6 +89,8 @@ export function AllLocks() {
             // Metadata token
             let name = "Unknown"
             let symbol = "???"
+            let logoUrl = null
+            
             try {
               name = (await publicClient.readContract({
                 address: token as `0x${string}`,
@@ -98,6 +103,9 @@ export function AllLocks() {
                 abi: ERC20_ABI,
                 functionName: "symbol",
               })) as string
+              
+              // Fetch token logo
+              logoUrl = await getTokenLogo(token)
             } catch {}
 
             detailedLocks.push({
@@ -105,6 +113,7 @@ export function AllLocks() {
               token: token as `0x${string}`,
               name,
               symbol,
+              logoUrl,
               amount,
               unlockTime,
               claimed,
@@ -151,7 +160,25 @@ export function AllLocks() {
           <Card key={`${lock.user}-${lock.index}`} className="bg-card border-border shadow-lg">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Lock #{lock.index + 1}</CardTitle>
+                <div className="flex items-center gap-3">
+                  {/* Token Logo */}
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
+                    {lock.logoUrl ? (
+                      <img 
+                        src={lock.logoUrl} 
+                        alt={lock.symbol}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback ke icon jika image error
+                          e.currentTarget.style.display = 'none'
+                          e.currentTarget.nextElementSibling.style.display = 'block'
+                        }}
+                      />
+                    ) : null}
+                    <Coins className="w-5 h-5 text-muted-foreground" style={{ display: lock.logoUrl ? 'none' : 'block' }} />
+                  </div>
+                  <CardTitle>Lock #{lock.index + 1}</CardTitle>
+                </div>
                 <Badge
                   className={
                     lock.claimed
