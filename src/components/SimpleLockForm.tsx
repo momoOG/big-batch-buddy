@@ -129,6 +129,28 @@ export function SimpleLockForm({ onLocked }: { onLocked?: () => void }) {
           if (!address) return
           
           try {
+            // Get user's lock count to determine the correct lockIndex
+            const lockCountResponse = await fetch(
+              `https://rpc.pulsechain.com`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  jsonrpc: '2.0',
+                  method: 'eth_call',
+                  params: [{
+                    to: CONTRACT_ADDRESS,
+                    data: `0x7b18d2b2${address.slice(2).padStart(64, '0')}`
+                  }, 'latest'],
+                  id: 1
+                })
+              }
+            )
+            
+            const lockCountData = await lockCountResponse.json()
+            const lockCount = parseInt(lockCountData.result, 16)
+            const lockIndex = Math.max(0, lockCount - 1)
+            
             const response = await fetch(
               `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/calculate-lock-points`,
               {
@@ -139,7 +161,7 @@ export function SimpleLockForm({ onLocked }: { onLocked?: () => void }) {
                 },
                 body: JSON.stringify({
                   userAddress: address,
-                  lockIndex: 0, // This will be updated based on actual lock count
+                  lockIndex: lockIndex,
                   tokenAddress: token,
                   tokenAmount: amount,
                   tokenDecimals: 18,

@@ -2,6 +2,3 @@ project_id = "csdzhdzvgtbptoseosov"
 
 [functions.calculate-lock-points]
 verify_jwt = false
-
-[functions.backfill-lock-points]
-verify_jwt = false
