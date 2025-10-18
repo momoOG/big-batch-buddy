@@ -257,9 +257,9 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
-  } catch (error) {
-    console.error('❌ Fatal error:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+  } catch (err) {
+    console.error('❌ Fatal error:', err)
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     return new Response(
       JSON.stringify({ error: errorMessage }),
       {
