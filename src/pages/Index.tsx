@@ -4,14 +4,16 @@ import { Navbar } from "@/components/Navbar"
 import { SimpleLockForm } from "@/components/SimpleLockForm"
 import { MyLockedTokens } from "@/components/MyLockedTokens"
 import { ClaimedTokens } from "@/components/ClaimedTokens"
-import { AllLocks } from "@/components/AllLocks" // ✅ Tambahan untuk tab publik
+import { AllLocks } from "@/components/AllLocks"
+import { UserPoints } from "@/components/UserPoints"
+import { PointsLeaderboard } from "@/components/PointsLeaderboard"
 import instagramIcon from "@/assets/instagram.png"
 import telegramIcon from "@/assets/telegram.png"
 import tiktokIcon from "@/assets/tiktok.png"
 import xIcon from "@/assets/x.png"
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"lock" | "locker" | "claimed" | "allLocks">("lock")
+  const [activeTab, setActiveTab] = useState<"lock" | "locker" | "claimed" | "allLocks" | "leaderboard">("lock")
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [showTipModal, setShowTipModal] = useState(false)
 
@@ -69,6 +71,15 @@ const Index = () => {
             <AllLocks />
           </div>
         )
+      case "leaderboard":
+        return (
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+              🏆 Points Leaderboard
+            </h2>
+            <PointsLeaderboard />
+          </div>
+        )
       default:
         return null
     }
@@ -94,6 +105,11 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
+          {/* User Points Display */}
+          <div className="mb-8">
+            <UserPoints />
+          </div>
+
           {/* Navigation */}
           <Navbar onChange={setActiveTab} />
 

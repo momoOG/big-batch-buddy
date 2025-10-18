@@ -118,13 +118,49 @@ export function SimpleLockForm({ onLocked }: { onLocked?: () => void }) {
         setNeedsApproval(false)
         setIsApproving(false)
       } else if (isLocking) {
-        // Lock successful - reset form
+        // Lock successful - reset form and calculate points
         toast({
           title: "✅ Tokens Locked!",
-          description: `${amount} tokens successfully locked for ${
-            DURATIONS.find(d => d.seconds === duration)?.label || ""
-          }`,
+          description: `${amount} tokens successfully locked. Calculating points...`,
         })
+        
+        // Calculate and award points
+        const calculatePoints = async () => {
+          if (!address) return
+          
+          try {
+            const response = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/calculate-lock-points`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+                },
+                body: JSON.stringify({
+                  userAddress: address,
+                  lockIndex: 0, // This will be updated based on actual lock count
+                  tokenAddress: token,
+                  tokenAmount: amount,
+                  tokenDecimals: 18,
+                  durationInSeconds: duration
+                })
+              }
+            )
+            
+            if (response.ok) {
+              const result = await response.json()
+              toast({
+                title: "🎉 Points Earned!",
+                description: `You earned ${Number(result.pointsEarned).toLocaleString()} points!`,
+              })
+            }
+          } catch (error) {
+            console.error('Error calculating points:', error)
+          }
+        }
+        
+        calculatePoints()
         
         setToken("")
         setAmount("")
@@ -135,7 +171,7 @@ export function SimpleLockForm({ onLocked }: { onLocked?: () => void }) {
         if (onLocked) onLocked()
       }
     }
-  }, [isSuccess, hash, isApproving, isLocking, amount, duration, toast, onLocked])
+  }, [isSuccess, hash, isApproving, isLocking, amount, duration, toast, onLocked, address, token])
 
   // Handle transaction error
   useEffect(() => {

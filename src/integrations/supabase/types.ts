@@ -14,7 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lock_points: {
+        Row: {
+          created_at: string
+          id: string
+          lock_duration_days: number
+          lock_index: number
+          points_earned: number
+          token_address: string
+          token_amount: number
+          token_decimals: number
+          usd_value: number
+          user_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lock_duration_days: number
+          lock_index: number
+          points_earned: number
+          token_address: string
+          token_amount: number
+          token_decimals: number
+          usd_value: number
+          user_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lock_duration_days?: number
+          lock_index?: number
+          points_earned?: number
+          token_address?: string
+          token_amount?: number
+          token_decimals?: number
+          usd_value?: number
+          user_address?: string
+        }
+        Relationships: []
+      }
+      user_points: {
+        Row: {
+          created_at: string
+          id: string
+          total_points: number
+          updated_at: string
+          user_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          total_points?: number
+          updated_at?: string
+          user_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          total_points?: number
+          updated_at?: string
+          user_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

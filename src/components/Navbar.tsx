@@ -3,13 +3,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 
 type MenuProps = {
-  onChange: (menu: "lock" | "locker" | "claimed" | "allLocks") => void
+  onChange: (menu: "lock" | "locker" | "claimed" | "allLocks" | "leaderboard") => void
 }
 
 export function Navbar({ onChange }: MenuProps) {
-  const [active, setActive] = useState<"lock" | "locker" | "claimed" | "allLocks">("lock")
+  const [active, setActive] = useState<"lock" | "locker" | "claimed" | "allLocks" | "leaderboard">("lock")
 
-  const handleClick = (menu: "lock" | "locker" | "claimed" | "allLocks") => {
+  const handleClick = (menu: "lock" | "locker" | "claimed" | "allLocks" | "leaderboard") => {
     setActive(menu)
     onChange(menu)
   }
@@ -65,6 +65,18 @@ export function Navbar({ onChange }: MenuProps) {
         }
       >
         🌍 All Locks
+      </Button>
+
+      {/* Leaderboard */}
+      <Button 
+        variant={getButtonVariant("leaderboard")}
+        onClick={() => handleClick("leaderboard")}
+        className={active === "leaderboard" 
+          ? "bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold shadow-lg" 
+          : "border-border hover:bg-card hover:text-foreground"
+        }
+      >
+        🏆 Leaderboard
       </Button>
     </div>
   )
