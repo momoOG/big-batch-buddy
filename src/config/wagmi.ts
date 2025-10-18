@@ -36,9 +36,3 @@ export const config = createConfig({
     [sepolia.id]: http(),
   },
 })
-
-declare module 'wagmi' {
-  interface Register {
-    config: typeof config
-  }
-}
