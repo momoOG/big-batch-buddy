@@ -7,6 +7,7 @@ import { ClaimedTokens } from "@/components/ClaimedTokens"
 import { AllLocks } from "@/components/AllLocks"
 import { UserPoints } from "@/components/UserPoints"
 import { PointsLeaderboard } from "@/components/PointsLeaderboard"
+import { BackfillPoints } from "@/components/BackfillPoints"
 import instagramIcon from "@/assets/instagram.png"
 import telegramIcon from "@/assets/telegram.png"
 import tiktokIcon from "@/assets/tiktok.png"
@@ -31,6 +32,7 @@ const Index = () => {
       case "lock":
         return (
           <div className="space-y-4">
+            <BackfillPoints />
             <SimpleLockForm onLocked={handleLocked} />
 
             {/* Tombol Tip a Coffee */}
