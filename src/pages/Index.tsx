@@ -5,7 +5,6 @@ import { SimpleLockForm } from "@/components/SimpleLockForm"
 import { MyLockedTokens } from "@/components/MyLockedTokens"
 import { ClaimedTokens } from "@/components/ClaimedTokens"
 import { AllLocks } from "@/components/AllLocks"
-import { UserPoints } from "@/components/UserPoints"
 
 import instagramIcon from "@/assets/instagram.png"
 import telegramIcon from "@/assets/telegram.png"
@@ -96,11 +95,6 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          {/* User Points Display */}
-          <div className="mb-8">
-            <UserPoints />
-          </div>
-
           {/* Navigation */}
           <Navbar onChange={setActiveTab} />
 
