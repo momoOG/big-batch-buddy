@@ -5,6 +5,7 @@ import { SimpleLockForm } from "@/components/SimpleLockForm"
 import { MyLockedTokens } from "@/components/MyLockedTokens"
 import { ClaimedTokens } from "@/components/ClaimedTokens"
 import { AllLocks } from "@/components/AllLocks"
+import { PresalePage } from "@/components/PresalePage"
 
 import instagramIcon from "@/assets/instagram.png"
 import telegramIcon from "@/assets/telegram.png"
@@ -12,7 +13,7 @@ import tiktokIcon from "@/assets/tiktok.png"
 import xIcon from "@/assets/x.png"
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"lock" | "locker" | "claimed" | "allLocks">("lock")
+  const [activeTab, setActiveTab] = useState<"lock" | "locker" | "claimed" | "allLocks" | "presale">("lock")
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [showTipModal, setShowTipModal] = useState(false)
 
@@ -68,6 +69,12 @@ const Index = () => {
               🌍 All Locks
             </h2>
             <AllLocks />
+          </div>
+        )
+      case "presale":
+        return (
+          <div className="max-w-6xl mx-auto">
+            <PresalePage />
           </div>
         )
       default:

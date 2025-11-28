@@ -2,14 +2,16 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 
+type MenuType = "lock" | "locker" | "claimed" | "allLocks" | "presale"
+
 type MenuProps = {
-  onChange: (menu: "lock" | "locker" | "claimed" | "allLocks") => void
+  onChange: (menu: MenuType) => void
 }
 
 export function Navbar({ onChange }: MenuProps) {
-  const [active, setActive] = useState<"lock" | "locker" | "claimed" | "allLocks">("lock")
+  const [active, setActive] = useState<MenuType>("lock")
 
-  const handleClick = (menu: "lock" | "locker" | "claimed" | "allLocks") => {
+  const handleClick = (menu: MenuType) => {
     setActive(menu)
     onChange(menu)
   }
@@ -67,6 +69,17 @@ export function Navbar({ onChange }: MenuProps) {
         🌍 All Locks
       </Button>
 
+      {/* Presale */}
+      <Button 
+        variant={getButtonVariant("presale")}
+        onClick={() => handleClick("presale")}
+        className={active === "presale" 
+          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg" 
+          : "border-border hover:bg-card hover:text-foreground"
+        }
+      >
+        🚀 Presale
+      </Button>
     </div>
   )
 }
