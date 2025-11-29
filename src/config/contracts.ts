@@ -1,10 +1,13 @@
 // Contract addresses for PulseChain
 export const CONTRACTS = {
-  LOCK: "0x8DCb596Db9eEC226Fe60AE5bFF65062B041eE636",
-  PRESALE: "0xa041C6CC2989b171439CE6045d24cb4D07165edA",
+  LOCK: "0x5fEb7cD0CC3cC56cAAA757aBB294428b6c24b847",
+  PRESALE: "0x491c1A55eBc959781770DCAeF5b8e054e67C4f96",
   USDT: "0x0Cb6F5a34ad42ec934882A05265A7d5F59b51A2f",
   USDC: "0x15D38573d2feeb82e7ad5187aB8c1D52810B1f07",
 } as const;
+
+// Presale countdown - 2 days from now
+export const PRESALE_START_TIME = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).getTime();
 
 export const PRESALE_ABI = [
   { "inputs":[{"internalType":"uint256","name":"stableAmount","type":"uint256"}],"name":"buyWithUSDC","outputs":[],"stateMutability":"nonpayable","type":"function" },

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { usePresaleData } from '@/hooks/usePresaleData';
 import { useStableToken, StableType } from '@/hooks/useStableToken';
-import { CONTRACTS, PRESALE_ABI, ERC20_ABI } from '@/config/contracts';
+import { CONTRACTS, PRESALE_ABI, ERC20_ABI, PRESALE_START_TIME } from '@/config/contracts';
 import { formatNumber, formatUsd, formatLock, parseTokenAmount } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { PULSECHAIN_CONFIG } from '@/config';
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { useCountdown } from '@/hooks/useCountdown';
 
 const MaxUint256 = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 
@@ -19,6 +21,8 @@ export function PresalePage() {
 
   const presaleData = usePresaleData();
   const stableToken = useStableToken(selectedStable);
+  const countdown = useCountdown(PRESALE_START_TIME);
+  const isPresaleOpen = countdown.isExpired;
 
   const { writeContract: approve, data: approveHash, isPending: isApproving } = useWriteContract();
   const { writeContract: buy, data: buyHash, isPending: isBuying } = useWriteContract();
@@ -79,6 +83,9 @@ export function PresalePage() {
   };
 
   const getStatusBadge = () => {
+    if (!isPresaleOpen) {
+      return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">Coming Soon</span>;
+    }
     if (!presaleData.saleActive) {
       return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-muted text-muted-foreground">Not Active</span>;
     }
@@ -104,6 +111,13 @@ export function PresalePage() {
           <p className="text-muted-foreground mb-6">
             Secure your allocation of LOCK before launch.
           </p>
+
+          {/* Countdown Timer */}
+          {!isPresaleOpen && (
+            <div className="mb-6 p-4 bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 rounded-xl">
+              <CountdownTimer targetTime={PRESALE_START_TIME} />
+            </div>
+          )}
 
           <div className="space-y-4">
             <div className="flex justify-between items-center py-2 border-b border-border/50">
@@ -260,7 +274,14 @@ export function PresalePage() {
 
           {/* Action Button */}
           <div className="mt-6">
-            {!isConnected ? (
+            {!isPresaleOpen ? (
+              <div className="text-center">
+                <CountdownTimer targetTime={PRESALE_START_TIME} />
+                <p className="text-sm text-muted-foreground mt-3">
+                  Presale will open automatically when countdown ends
+                </p>
+              </div>
+            ) : !isConnected ? (
               <p className="text-center text-muted-foreground py-4">
                 Connect your wallet to participate
               </p>
