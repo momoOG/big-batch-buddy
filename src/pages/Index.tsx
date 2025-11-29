@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { ConnectButton } from "@/components/ConnectButton"
 import { Navbar } from "@/components/Navbar" 
 import { SimpleLockForm } from "@/components/SimpleLockForm"
 import { MyLockedTokens } from "@/components/MyLockedTokens"
@@ -84,31 +83,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                🔒 Lockify
-              </h1>
-              <p className="text-sm text-muted-foreground">Secure Token Locker on PulseChain</p>
-            </div>
-            <ConnectButton />
-          </div>
-        </div>
-      </header>
+      {/* Header with Navigation */}
+      <Navbar onChange={setActiveTab} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          {/* Navigation */}
-          <Navbar onChange={setActiveTab} />
-
           {/* Content Area */}
-          <div className="mt-8">
-            {renderContent()}
-          </div>
+          {renderContent()}
 
           {/* Features Section */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
