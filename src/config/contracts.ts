@@ -6,8 +6,9 @@ export const CONTRACTS = {
   USDC: "0x15D38573d2feeb82e7ad5187aB8c1D52810B1f07",
 } as const;
 
-// Presale countdown - 2 days from now
-export const PRESALE_START_TIME = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).getTime();
+// Presale countdown - Fixed timestamp: December 1, 2025 at 00:00 UTC (1 day from Nov 30)
+// This is a fixed timestamp so it doesn't reset on page refresh
+export const PRESALE_START_TIME = Date.UTC(2025, 11, 1, 0, 0, 0); // Dec 1, 2025 00:00 UTC
 
 export const PRESALE_ABI = [
   { "inputs":[{"internalType":"uint256","name":"stableAmount","type":"uint256"}],"name":"buyWithUSDC","outputs":[],"stateMutability":"nonpayable","type":"function" },
