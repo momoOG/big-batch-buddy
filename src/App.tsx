@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { WagmiProvider } from "wagmi"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { config } from "./config/wagmi"
 import Index from "./pages/Index"
 import NotFound from "./pages/NotFound"
@@ -19,7 +19,12 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Navigate to="/lock" replace />} />
+            <Route path="/lock" element={<Index />} />
+            <Route path="/locker" element={<Index />} />
+            <Route path="/claimed" element={<Index />} />
+            <Route path="/all-locks" element={<Index />} />
+            <Route path="/presale" element={<Index />} />
             <Route path="/lock/:user/:index" element={<LockDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

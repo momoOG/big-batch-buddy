@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
 import { Navbar } from "@/components/Navbar" 
 import { SimpleLockForm } from "@/components/SimpleLockForm"
 import { MyLockedTokens } from "@/components/MyLockedTokens"
@@ -12,7 +13,7 @@ import tiktokIcon from "@/assets/tiktok.png"
 import xIcon from "@/assets/x.png"
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"lock" | "locker" | "claimed" | "allLocks" | "presale">("lock")
+  const location = useLocation()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [showTipModal, setShowTipModal] = useState(false)
 
@@ -26,65 +27,74 @@ const Index = () => {
   }
 
   const renderContent = () => {
-    switch (activeTab) {
-      case "lock":
-        return (
-          <div className="space-y-4">
-            <SimpleLockForm onLocked={handleLocked} />
+    const path = location.pathname
 
-            {/* Tombol Tip a Coffee */}
-            <div className="text-center mt-4">
-              <button
-                onClick={() => setShowTipModal(true)}
-                className="px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow hover:opacity-90"
-              >
-                ☕ Tip a Coffee
-              </button>
-            </div>
+    if (path === "/lock" || path === "/") {
+      return (
+        <div className="space-y-4">
+          <SimpleLockForm onLocked={handleLocked} />
+
+          {/* Tombol Tip a Coffee */}
+          <div className="text-center mt-4">
+            <button
+              onClick={() => setShowTipModal(true)}
+              className="px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow hover:opacity-90"
+            >
+              ☕ Tip a Coffee
+            </button>
           </div>
-        )
-      case "locker":
-        return (
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-              My Locked Tokens
-            </h2>
-            <MyLockedTokens />
-          </div>
-        )
-      case "claimed":
-        return (
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
-              Claimed Tokens
-            </h2>
-            <ClaimedTokens />
-          </div>
-        )
-      case "allLocks":
-        return (
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-              🌍 All Locks
-            </h2>
-            <AllLocks />
-          </div>
-        )
-      case "presale":
-        return (
-          <div className="max-w-6xl mx-auto">
-            <PresalePage />
-          </div>
-        )
-      default:
-        return null
+        </div>
+      )
     }
+
+    if (path === "/locker") {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
+            My Locked Tokens
+          </h2>
+          <MyLockedTokens />
+        </div>
+      )
+    }
+
+    if (path === "/claimed") {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
+            Claimed Tokens
+          </h2>
+          <ClaimedTokens />
+        </div>
+      )
+    }
+
+    if (path === "/all-locks") {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            🌍 All Locks
+          </h2>
+          <AllLocks />
+        </div>
+      )
+    }
+
+    if (path === "/presale") {
+      return (
+        <div className="max-w-6xl mx-auto">
+          <PresalePage />
+        </div>
+      )
+    }
+
+    return null
   }
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header with Navigation */}
-      <Navbar onChange={setActiveTab} />
+      <Navbar />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
