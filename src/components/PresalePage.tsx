@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { usePresaleData } from '@/hooks/usePresaleData';
 import { useStableToken, StableType } from '@/hooks/useStableToken';
 import { CONTRACTS, PRESALE_ABI, ERC20_ABI, PRESALE_START_TIME } from '@/config/contracts';
-import { formatNumber, formatUsd, formatLock, parseTokenAmount } from '@/lib/formatters';
+import { formatNumber, formatUsd, parseTokenAmount } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -35,25 +35,42 @@ export function PresalePage() {
     hash: buyHash,
   });
 
+  // Track if we've already handled the success
+  const approveHandled = useRef(false);
+  const buyHandled = useRef(false);
+
+  // Handle approve success
+  useEffect(() => {
+    if (isApproveSuccess && !approveHandled.current) {
+      approveHandled.current = true;
+      stableToken.refetch();
+      toast({ title: `${selectedStable} approved successfully!` });
+    }
+    if (!isApproveSuccess) {
+      approveHandled.current = false;
+    }
+  }, [isApproveSuccess, selectedStable, stableToken, toast]);
+
+  // Handle buy success  
+  useEffect(() => {
+    if (isBuySuccess && !buyHandled.current) {
+      buyHandled.current = true;
+      presaleData.refetch();
+      stableToken.refetch();
+      setAmount('');
+      toast({ title: `Purchase successful!` });
+    }
+    if (!isBuySuccess) {
+      buyHandled.current = false;
+    }
+  }, [isBuySuccess, presaleData, stableToken, toast]);
+
   const isWrongNetwork = isConnected && chainId !== PULSECHAIN_CONFIG.id;
   const inputAmount = parseFloat(amount) || 0;
   const inputAmountRaw = parseTokenAmount(amount, stableToken.decimals);
   const tokensToReceive = inputAmount * presaleData.tokensPerUsd;
   const needsApproval = stableToken.allowance < inputAmount && inputAmount > 0;
   const insufficientBalance = inputAmount > stableToken.balance;
-
-  // Refetch after successful transactions
-  if (isApproveSuccess) {
-    stableToken.refetch();
-    toast({ title: `${selectedStable} approved successfully!` });
-  }
-
-  if (isBuySuccess) {
-    presaleData.refetch();
-    stableToken.refetch();
-    setAmount('');
-    toast({ title: `Successfully purchased ${formatNumber(tokensToReceive, 0)} LOCK!` });
-  }
 
   const handleApprove = () => {
     approve({
