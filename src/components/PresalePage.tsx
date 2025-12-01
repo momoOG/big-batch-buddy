@@ -86,9 +86,6 @@ export function PresalePage() {
     if (!isPresaleOpen) {
       return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">Coming Soon</span>;
     }
-    if (!presaleData.saleActive) {
-      return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-muted text-muted-foreground">Not Active</span>;
-    }
     if (presaleData.isSoldOut) {
       return <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-cyan-500 text-white">Sold Out</span>;
     }
@@ -285,10 +282,6 @@ export function PresalePage() {
               <p className="text-center text-muted-foreground py-4">
                 Connect your wallet to participate
               </p>
-            ) : !presaleData.saleActive ? (
-              <Button disabled className="w-full">
-                Presale is not active
-              </Button>
             ) : presaleData.isSoldOut ? (
               <Button disabled className="w-full">
                 Presale is sold out
