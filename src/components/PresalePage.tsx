@@ -35,35 +35,29 @@ export function PresalePage() {
     hash: buyHash,
   });
 
-  // Track if we've already handled the success
-  const approveHandled = useRef(false);
-  const buyHandled = useRef(false);
+  // Track if we've already handled the success using approveHash/buyHash as keys
+  const lastHandledApproveHash = useRef<string | undefined>(undefined);
+  const lastHandledBuyHash = useRef<string | undefined>(undefined);
 
-  // Handle approve success
+  // Handle approve success - only depend on stable values
   useEffect(() => {
-    if (isApproveSuccess && !approveHandled.current) {
-      approveHandled.current = true;
+    if (isApproveSuccess && approveHash && approveHash !== lastHandledApproveHash.current) {
+      lastHandledApproveHash.current = approveHash;
       stableToken.refetch();
       toast({ title: `${selectedStable} approved successfully!` });
     }
-    if (!isApproveSuccess) {
-      approveHandled.current = false;
-    }
-  }, [isApproveSuccess, selectedStable, stableToken, toast]);
+  }, [isApproveSuccess, approveHash]);
 
-  // Handle buy success  
+  // Handle buy success - only depend on stable values
   useEffect(() => {
-    if (isBuySuccess && !buyHandled.current) {
-      buyHandled.current = true;
+    if (isBuySuccess && buyHash && buyHash !== lastHandledBuyHash.current) {
+      lastHandledBuyHash.current = buyHash;
       presaleData.refetch();
       stableToken.refetch();
       setAmount('');
       toast({ title: `Purchase successful!` });
     }
-    if (!isBuySuccess) {
-      buyHandled.current = false;
-    }
-  }, [isBuySuccess, presaleData, stableToken, toast]);
+  }, [isBuySuccess, buyHash]);
 
   const isWrongNetwork = isConnected && chainId !== PULSECHAIN_CONFIG.id;
   const inputAmount = parseFloat(amount) || 0;
